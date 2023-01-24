@@ -1,4 +1,5 @@
 require("dotenv").config();
+const { default: axios } = require("axios");
 const Discord = require("discord.js");
 const mongoose = require("mongoose");
 const patchModel = require("./models/patch.model");
@@ -83,6 +84,29 @@ const featureList = {
           break;
         default:
           break;
+      }
+    }
+  },
+  generateWaifuPic: async (msg) => {
+    if (msg.content.match(/^!/g)) {
+      if (
+        [
+          "1066116904013541510",
+          "1066116677084917870",
+        ].includes(msg.channel.id)
+      ) {
+        let command = msg.content.split("!");
+        if (!command[1]) return;
+        isNsfw = false;
+        if (msg.channel.id === "1066116677084917870") isNsfw = true;
+        if (command[1] === "wa") {
+          const { url } = (
+            await axios.get(
+              `https://api.waifu.pics/${isNsfw ? "nsfw" : "sfw"}/waifu`
+            )
+          ).data;
+          msg.reply(url);
+        }
       }
     }
   },
