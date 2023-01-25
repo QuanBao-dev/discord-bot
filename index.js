@@ -24,7 +24,7 @@ patchModel.watch().on("change", (data) => {
       const document = data.fullDocument;
       const { title, id } = document.dataVN;
       announcementChannel.send(`
-        New Machine Translation has been published.\n**${title}**\nhttps://sugoivisualnovel.up.railway.app/vns/${id}\n${supportMeChannelString}`);
+        @everyone, New Machine Translation has been published.\n**${title}**\nhttps://sugoivisualnovel.up.railway.app/vns/${id}\n${supportMeChannelString}`);
       break;
     default:
       break;
