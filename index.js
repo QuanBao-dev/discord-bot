@@ -18,13 +18,46 @@ patchModel.watch().on("change", (data) => {
       const announcementChannel = client.channels.cache.get(
         "1063717809114329140"
       );
-      const supportMeChannelString = client.channels.cache
-        .get("1063881195458396210")
-        .toString();
       const document = data.fullDocument;
-      const { title, id } = document.dataVN;
-      announcementChannel.send(`
-        New Machine Translation has been published.\n**${title}**\nhttps://sugoivisualnovel.up.railway.app/vns/${id}\nIf you want to encourage me to do more, you can ${supportMeChannelString}\n@everyone`);
+      const { title, id, image, aliases, rating } = document.dataVN;
+      const embedMessage = new Discord.EmbedBuilder()
+        .setColor("0x0099FF")
+        .setTitle("🎉 New Release !!")
+        .setURL(`https://sugoivisualnovel.up.railway.app/vns/${id}`)
+        .setAuthor({
+          name: "SVN",
+          iconURL:
+            "https://media.discordapp.net/attachments/1066129550091763905/1068209675788628060/clannad.jpg",
+          url: "https://sugoivisualnovel.up.railway.app/vns/${id}",
+        })
+        .setDescription(`New patch has been released on my site.`)
+        .addFields(
+          { name: "Title", value: `**${title}**` },
+          { name: "Aliases", value: `${aliases}`, inline: true },
+          {
+            name: "Date Released",
+            value: `${
+              new Date(Date.now()).toUTCString().slice(0, 16) +
+              "\n" +
+              new Date(Date.now()).toUTCString().slice(16)
+            }`,
+            inline: true,
+          },
+          { name: "Rating", value: `${rating}` }
+        )
+        .setThumbnail(
+          "https://images-ext-1.discordapp.net/external/OM8X_KBrqPCGZjLMIOYhv69Y6qMycBylotIZuiYV-zc/https/cdn-longterm.mee6.xyz/plugins/welcome/images/1059197207909253130/a4d5e041bba23c0531de88e88fd89ddf19b9017df784dc8a616997e462ead943.jpeg?width=1097&height=617"
+        )
+        .setImage(image)
+        .setFooter({
+          text: `*If you want to encourage me to do more, you can buy me a coffee*`,
+          iconURL:
+            "https://images-ext-1.discordapp.net/external/OM8X_KBrqPCGZjLMIOYhv69Y6qMycBylotIZuiYV-zc/https/cdn-longterm.mee6.xyz/plugins/welcome/images/1059197207909253130/a4d5e041bba23c0531de88e88fd89ddf19b9017df784dc8a616997e462ead943.jpeg?width=1097&height=617",
+        });
+      announcementChannel.send({
+        content: "@everyone",
+        embeds: [embedMessage],
+      });
       break;
     default:
       break;
@@ -90,10 +123,7 @@ const featureList = {
   generateWaifuPic: async (msg) => {
     if (msg.content.match(/^!/g)) {
       if (
-        [
-          "1066116904013541510",
-          "1066116677084917870",
-        ].includes(msg.channel.id)
+        ["1066116904013541510", "1066116677084917870"].includes(msg.channel.id)
       ) {
         let command = msg.content.split("!");
         if (!command[1]) return;
