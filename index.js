@@ -22,7 +22,7 @@ patchModel.watch().on("change", (data) => {
       const { title, id, image, aliases, rating } = document.dataVN;
       const embedMessage = new Discord.EmbedBuilder()
         .setColor("0x0099FF")
-        .setTitle("🎉 New Release !!")
+        .setTitle("🎉 New Release 🔥🔥🔥!!")
         .setURL(`https://sugoivisualnovel.up.railway.app/vns/${id}`)
         .setAuthor({
           name: "SVN",
@@ -30,18 +30,16 @@ patchModel.watch().on("change", (data) => {
             "https://media.discordapp.net/attachments/1066129550091763905/1068209675788628060/clannad.jpg",
           url: "https://sugoivisualnovel.up.railway.app/vns/${id}",
         })
-        .setDescription(`New patch has been released on my site.`)
+        .setDescription(`New patch has been released on my site. Enjoy!`)
         .addFields(
           { name: "Title", value: `**${title}**` },
-          { name: "Aliases", value: `${aliases}`, inline: true },
           {
-            name: "Date Released",
+            name: "Release Date",
             value: `${
               new Date(Date.now()).toUTCString().slice(0, 16) +
               "\n" +
               new Date(Date.now()).toUTCString().slice(16)
             }`,
-            inline: true,
           },
           { name: "Rating", value: `${rating}` }
         )
