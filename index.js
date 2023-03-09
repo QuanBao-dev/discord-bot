@@ -53,7 +53,7 @@ patchModel.watch().on("change", (data) => {
             "https://images-ext-1.discordapp.net/external/OM8X_KBrqPCGZjLMIOYhv69Y6qMycBylotIZuiYV-zc/https/cdn-longterm.mee6.xyz/plugins/welcome/images/1059197207909253130/a4d5e041bba23c0531de88e88fd89ddf19b9017df784dc8a616997e462ead943.jpeg?width=1097&height=617",
         });
       announcementChannel.send({
-        content: "@everyone",
+        content: "",
         embeds: [embedMessage],
       });
       break;
