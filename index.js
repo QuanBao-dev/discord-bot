@@ -15,11 +15,17 @@ const client = new Discord.Client({
 patchModel.watch().on("change", (data) => {
   switch (data.operationType) {
     case "insert":
-      const announcementChannel = client.channels.cache.get(
+      let announcementChannel = client.channels.cache.get(
         "1063717809114329140"
       );
       const document = data.fullDocument;
       const { title, id, image, aliases, rating } = document.dataVN;
+      const isMemberOnly = document.isMemberOnly;
+      if(isMemberOnly){
+        announcementChannel = client.channels.cache.get(
+          "1070419123084984361"
+        );
+      }
       const embedMessage = new Discord.EmbedBuilder()
         .setColor("0x0099FF")
         .setTitle("🎉 New Release 🔥🔥🔥!!")
