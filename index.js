@@ -12,56 +12,27 @@ const client = new Discord.Client({
     Discord.GatewayIntentBits.DirectMessages,
   ],
 });
-patchModel.watch().on("change", (data) => {
+patchModel.watch().on("change", async (data) => {
   switch (data.operationType) {
     case "insert":
-      let announcementChannel = client.channels.cache.get(
-        "1063717809114329140"
-      );
       const document = data.fullDocument;
-      const { title, id, image, aliases, rating } = document.dataVN;
-      const isMemberOnly = document.isMemberOnly;
-      if(isMemberOnly){
-        announcementChannel = client.channels.cache.get(
-          "1070419123084984361"
-        );
-      }
-      const embedMessage = new Discord.EmbedBuilder()
-        .setColor("0x0099FF")
-        .setTitle("🎉 New Release 🔥🔥🔥!!")
-        .setURL(`https://sugoivisualnovel.up.railway.app/vns/${id}`)
-        .setAuthor({
-          name: "SVN",
-          iconURL:
-            "https://media.discordapp.net/attachments/1066129550091763905/1068209675788628060/clannad.jpg",
-          url: "https://sugoivisualnovel.up.railway.app/vns/${id}",
-        })
-        .setDescription(`New patch has been released on my site. Enjoy!`)
-        .addFields(
-          { name: "Title", value: `**${title}**` },
-          {
-            name: "Release Date",
-            value: `${
-              new Date(Date.now()).toUTCString().slice(0, 16) +
-              "\n" +
-              new Date(Date.now()).toUTCString().slice(16)
-            }`,
-          },
-          { name: "Rating", value: `${rating}` }
-        )
-        .setThumbnail(
-          "https://images-ext-1.discordapp.net/external/OM8X_KBrqPCGZjLMIOYhv69Y6qMycBylotIZuiYV-zc/https/cdn-longterm.mee6.xyz/plugins/welcome/images/1059197207909253130/a4d5e041bba23c0531de88e88fd89ddf19b9017df784dc8a616997e462ead943.jpeg?width=1097&height=617"
-        )
-        .setImage(image)
-        .setFooter({
-          text: `*If you want to encourage me to do more, you can buy me a coffee*`,
-          iconURL:
-            "https://images-ext-1.discordapp.net/external/OM8X_KBrqPCGZjLMIOYhv69Y6qMycBylotIZuiYV-zc/https/cdn-longterm.mee6.xyz/plugins/welcome/images/1059197207909253130/a4d5e041bba23c0531de88e88fd89ddf19b9017df784dc8a616997e462ead943.jpeg?width=1097&height=617",
-        });
-      announcementChannel.send({
-        content: "",
-        embeds: [embedMessage],
-      });
+      if (!document.isNotifyDiscord) return;
+      notifyDiscordMessage(
+        document.dataVN,
+        document.channelAnnouncementId,
+        document.isMemberOnly
+      );
+      break;
+    case "update":
+      const patch = await patchModel
+        .findOne({ _id: data.documentKey._id })
+        .lean();
+      if (!patch.isNotifyDiscord) return;
+      notifyDiscordMessage(
+        patch.dataVN,
+        patch.channelAnnouncementId,
+        patch.isMemberOnly
+      );
       break;
     default:
       break;
@@ -154,3 +125,43 @@ client.on("messageCreate", async (msg) => {
   // const privateChannel = client.channels.cache.get('1066129550091763905');
   // privateChannel.send("Ready");
 });
+function notifyDiscordMessage(dataVN, channelAnnouncementId, isMemberOnly) {
+  let announcementChannel = client.channels.cache.get(channelAnnouncementId);
+  const { title, id, image, rating } = dataVN;
+  const embedMessage = new Discord.EmbedBuilder()
+    .setColor("0x0099FF")
+    .setTitle(`🎉 New ${isMemberOnly ? "Early Access" : ""} Release 🔥🔥🔥!!`)
+    .setURL(`https://sugoivisualnovel.up.railway.app/vns/${id}`)
+    .setAuthor({
+      name: "SVN",
+      iconURL:
+        "https://media.discordapp.net/attachments/1066129550091763905/1068209675788628060/clannad.jpg",
+      url: "https://sugoivisualnovel.up.railway.app/vns/${id}",
+    })
+    .setDescription(`New patch has been released on my site. Enjoy!`)
+    .addFields(
+      { name: "Title", value: `**${title}**` },
+      {
+        name: "Release Date",
+        value: `${
+          new Date(Date.now()).toUTCString().slice(0, 16) +
+          "\n" +
+          new Date(Date.now()).toUTCString().slice(16)
+        }`,
+      },
+      { name: "Rating", value: `${rating}` }
+    )
+    .setThumbnail(
+      "https://images-ext-1.discordapp.net/external/OM8X_KBrqPCGZjLMIOYhv69Y6qMycBylotIZuiYV-zc/https/cdn-longterm.mee6.xyz/plugins/welcome/images/1059197207909253130/a4d5e041bba23c0531de88e88fd89ddf19b9017df784dc8a616997e462ead943.jpeg?width=1097&height=617"
+    )
+    .setImage(image)
+    .setFooter({
+      text: `*If you want to encourage me to do more, you can buy me a coffee*`,
+      iconURL:
+        "https://images-ext-1.discordapp.net/external/OM8X_KBrqPCGZjLMIOYhv69Y6qMycBylotIZuiYV-zc/https/cdn-longterm.mee6.xyz/plugins/welcome/images/1059197207909253130/a4d5e041bba23c0531de88e88fd89ddf19b9017df784dc8a616997e462ead943.jpeg?width=1097&height=617",
+    });
+  announcementChannel.send({
+    content: "",
+    embeds: [embedMessage],
+  });
+}
