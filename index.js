@@ -13,29 +13,33 @@ const client = new Discord.Client({
   ],
 });
 patchModel.watch().on("change", async (data) => {
-  switch (data.operationType) {
-    case "insert":
-      const document = data.fullDocument;
-      if (!document.isNotifyDiscord) return;
-      notifyDiscordMessage(
-        document.dataVN,
-        document.channelAnnouncementId,
-        document.isMemberOnly
-      );
-      break;
-    case "update":
-      const patch = await patchModel
-        .findOne({ _id: data.documentKey._id })
-        .lean();
-      if (!patch.isNotifyDiscord) return;
-      notifyDiscordMessage(
-        patch.dataVN,
-        patch.channelAnnouncementId,
-        patch.isMemberOnly
-      );
-      break;
-    default:
-      break;
+  try {
+    switch (data.operationType) {
+      case "insert":
+        const document = data.fullDocument;
+        if (!document.isNotifyDiscord) return;
+        notifyDiscordMessage(
+          document.dataVN,
+          document.channelAnnouncementId,
+          document.isMemberOnly
+        );
+        break;
+      case "update":
+        const patch = await patchModel
+          .findOne({ _id: data.documentKey._id })
+          .lean();
+        if (!patch.isNotifyDiscord) return;
+        notifyDiscordMessage(
+          patch.dataVN,
+          patch.channelAnnouncementId,
+          patch.isMemberOnly
+        );
+        break;
+      default:
+        break;
+    }
+  } catch (error) {
+    console.log(error);
   }
 });
 mongoose.connect(
