@@ -135,12 +135,12 @@ function notifyDiscordMessage(dataVN, channelAnnouncementId, isMemberOnly) {
   const embedMessage = new Discord.EmbedBuilder()
     .setColor("0x0099FF")
     .setTitle(`🎉 New ${isMemberOnly ? "Early Access" : ""} Release 🔥🔥🔥!!`)
-    .setURL(`https://sugoivisualnovel.up.railway.app/vns/${id}`)
+    .setURL(`https://sugoivisualnovel2.up.railway.app/vns/${id}`)
     .setAuthor({
       name: "SVN",
       iconURL:
         "https://media.discordapp.net/attachments/1066129550091763905/1068209675788628060/clannad.jpg",
-      url: "https://sugoivisualnovel.up.railway.app/vns/${id}",
+      url: "https://sugoivisualnovel2.up.railway.app/vns/${id}",
     })
     .setDescription(`New patch has been released on my site. Enjoy!`)
     .addFields(
