@@ -140,7 +140,7 @@ function notifyDiscordMessage(dataVN, channelAnnouncementId, isMemberOnly) {
       name: "GVN",
       iconURL:
         "https://media.discordapp.net/attachments/1066129550091763905/1068209675788628060/clannad.jpg",
-      url: "https://sugoivisualnovel2.up.railway.app/vns/${id}",
+      url: "https://greatvisualnovel.up.railway.app/vns/${id}",
     })
     .setDescription(`New patch has been released on my site. Enjoy!`)
     .addFields(
