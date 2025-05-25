@@ -135,7 +135,7 @@ function notifyDiscordMessage(dataVN, channelAnnouncementId, isMemberOnly) {
   const embedMessage = new Discord.EmbedBuilder()
     .setColor("0x0099FF")
     .setTitle(`🎉 New ${isMemberOnly ? "Early Access" : ""} Release 🔥🔥🔥!!`)
-    .setURL(`https://sugoivisualnovel2.up.railway.app/vns/${id}`)
+    .setURL(`https://greatvisualnovel.up.railway.app/vns/${id}`)
     .setAuthor({
       name: "GVN",
       iconURL:
