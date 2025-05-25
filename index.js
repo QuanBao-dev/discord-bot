@@ -137,7 +137,7 @@ function notifyDiscordMessage(dataVN, channelAnnouncementId, isMemberOnly) {
     .setTitle(`🎉 New ${isMemberOnly ? "Early Access" : ""} Release 🔥🔥🔥!!`)
     .setURL(`https://sugoivisualnovel2.up.railway.app/vns/${id}`)
     .setAuthor({
-      name: "SVN",
+      name: "GVN",
       iconURL:
         "https://media.discordapp.net/attachments/1066129550091763905/1068209675788628060/clannad.jpg",
       url: "https://sugoivisualnovel2.up.railway.app/vns/${id}",
