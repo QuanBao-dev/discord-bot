@@ -128,16 +128,20 @@ client.on("messageCreate", async (msg) => {
   });
   if (msg.author.bot) return;
   if (msg.channel.id === "1522804403088920647") {
-    console.log(msg.member.bannable);
-    if (!msg.member.bannable) {
-      console.log(`Could not ban ${msg.author.tag} due to role hierarchy.`);
-      return;
+    try {
+      if (!msg.member.bannable) {
+        console.log(`Could not ban ${msg.author.tag} due to role hierarchy.`);
+        return;
+      }
+      await msg.guild.members.ban(msg.author.id, {
+        reason: "Sent a message in the forbidden trap channel.",
+        deleteMessageSeconds: 60 * 60 * 24 * 7,
+      });
+      console.log(`Successfully trapped and banned: ${msg.author.tag}`);
+    } catch (error) {
+      console.error(error);
+      console.log("An error occurred while trying to ban this user.");
     }
-    await msg.guild.members.ban(msg.author.id, {
-      reason: "Sent a message in the forbidden trap channel.",
-      deleteMessageSeconds: 60 * 60 * 24 * 7,
-    });
-    console.log(`Successfully trapped and banned: ${msg.author.tag}`);
   }
 });
 
