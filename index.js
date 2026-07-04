@@ -21,7 +21,7 @@ patchModel.watch().on("change", async (data) => {
         notifyDiscordMessage(
           document.dataVN,
           document.channelAnnouncementId,
-          document.isMemberOnly
+          document.isMemberOnly,
         );
         break;
       case "update":
@@ -32,7 +32,7 @@ patchModel.watch().on("change", async (data) => {
         notifyDiscordMessage(
           patch.dataVN,
           patch.channelAnnouncementId,
-          patch.isMemberOnly
+          patch.isMemberOnly,
         );
         break;
       default:
@@ -55,14 +55,14 @@ mongoose.connect(
     } else {
       console.log("connected to db");
     }
-  }
+  },
 );
 
 const featureList = {
   warningDiscordInvitation: async (msg) => {
     if (msg.content.match(/https:\/\/discord.gg\/.+/g)) {
       await msg.reply(
-        "**WARNING: This is a invitation from other discord servers. Please make sure you clearly know about the discord server before deciding to join it. It could be an invitation sent by a hacker.**"
+        "**WARNING: This is a invitation from other discord servers. Please make sure you clearly know about the discord server before deciding to join it. It could be an invitation sent by a hacker.**",
       );
     }
   },
@@ -72,7 +72,7 @@ const featureList = {
       const permission = msg.member.permissions.has("Administrator");
       if (!permission)
         return message.reply(
-          "❌ | You don't have permission to use this command"
+          "❌ | You don't have permission to use this command",
         );
       let command = msg.content.split("!");
       const mentionedMember = msg.mentions.members.first();
@@ -85,7 +85,7 @@ const featureList = {
         case "warn":
           if (!message) return;
           channel.send(
-            `${mentionedMember.toString()} has been warned:\n*${message}*`
+            `${mentionedMember.toString()} has been warned:\n*${message}*`,
           );
           break;
         case "ban":
@@ -111,7 +111,7 @@ const featureList = {
         if (command[1] === "wa") {
           const { url } = (
             await axios.get(
-              `https://api.waifu.pics/${isNsfw ? "nsfw" : "sfw"}/waifu`
+              `https://api.waifu.pics/${isNsfw ? "nsfw" : "sfw"}/waifu`,
             )
           ).data;
           msg.reply(url);
@@ -126,9 +126,21 @@ client.on("messageCreate", async (msg) => {
   Object.keys(featureList).forEach((keyCommand) => {
     featureList[keyCommand](msg);
   });
-  // const privateChannel = client.channels.cache.get('1066129550091763905');
-  // privateChannel.send("Ready");
+  if (msg.author.bot) return;
+  if (msg.channel.id === "1522804403088920647") {
+    console.log(msg.member.bannable);
+    if (!msg.member.bannable) {
+      console.log(`Could not ban ${msg.author.tag} due to role hierarchy.`);
+      return;
+    }
+    await msg.guild.members.ban(msg.author.id, {
+      reason: "Sent a message in the forbidden trap channel.",
+      deleteMessageSeconds: 60 * 60 * 24 * 7,
+    });
+    console.log(`Successfully trapped and banned: ${msg.author.tag}`);
+  }
 });
+
 function notifyDiscordMessage(dataVN, channelAnnouncementId, isMemberOnly) {
   let announcementChannel = client.channels.cache.get(channelAnnouncementId);
   const { title, id, image, rating } = dataVN;
@@ -153,10 +165,10 @@ function notifyDiscordMessage(dataVN, channelAnnouncementId, isMemberOnly) {
           new Date(Date.now()).toUTCString().slice(16)
         }`,
       },
-      { name: "Rating", value: `${rating}` }
+      { name: "Rating", value: `${rating}` },
     )
     .setThumbnail(
-      "https://images-ext-1.discordapp.net/external/OM8X_KBrqPCGZjLMIOYhv69Y6qMycBylotIZuiYV-zc/https/cdn-longterm.mee6.xyz/plugins/welcome/images/1059197207909253130/a4d5e041bba23c0531de88e88fd89ddf19b9017df784dc8a616997e462ead943.jpeg?width=1097&height=617"
+      "https://images-ext-1.discordapp.net/external/OM8X_KBrqPCGZjLMIOYhv69Y6qMycBylotIZuiYV-zc/https/cdn-longterm.mee6.xyz/plugins/welcome/images/1059197207909253130/a4d5e041bba23c0531de88e88fd89ddf19b9017df784dc8a616997e462ead943.jpeg?width=1097&height=617",
     )
     .setImage(image)
     .setFooter({
