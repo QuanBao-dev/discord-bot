@@ -137,6 +137,8 @@ client.on("messageCreate", async (msg) => {
         reason: "Sent a message in the forbidden trap channel.",
         deleteMessageSeconds: 60 * 60 * 24 * 7,
       });
+      const trappedChannel = client.channels.cache.get("1522804403088920647");
+      trappedChannel.send(`Successfully trapped and banned: ${msg.author.tag}`);
       console.log(`Successfully trapped and banned: ${msg.author.tag}`);
     } catch (error) {
       console.error(error);
